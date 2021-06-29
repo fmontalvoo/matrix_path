@@ -5,16 +5,19 @@ int cantidad_de_pasos = 0;
 int opt = -1, rows = 0, cols = 0, x = 10001;
 
 int **matrix;
-int *m, *arr, *pos;
+int *mtrx, *arr, *pos;
 
 void create_matrix(){
     matrix = new int*[rows];
     for(int i = 0; i < rows; ++i)
         matrix[i] = new int[cols];
 
+    mtrx = new int[rows*cols];
+
     for(int row = 0; row < rows; row++){
         for(int col = 0; col < cols; col++){
             matrix[row][col] = 0;
+            mtrx[col+row*cols] = 0;
         }
     }
 }
@@ -23,12 +26,10 @@ void enumerate_positions(){
     arr = new int[x];
     pos = new int[x];
 
-    for(int i = 0; i < x; i++)
+    for(int i = 0; i < x; i++){
+        pos[i] = i;
         arr[i] = (i+1);
-
-    for(int j = 0; j < x; j++)
-        pos[j] = j;
-
+    }
 }
 
 void display_matrix(){
@@ -42,21 +43,10 @@ void display_matrix(){
     printf("\n");
 }
 
-void matrix_to_array(){
-    m = new int[rows*cols];
-    for(int row = 0; row < rows; row++){
-        for(int col = 0; col < cols; col++){
-            m[col+row*cols] = matrix[row][col];
-        }
-    }
-}
-
 void array_to_matrix(){
-    for(int row = 0; row < rows; row++){
-        for(int col = 0; col < cols; col++){
-            matrix[row][col] = m[col+row*cols];
-        }
-    }
+    for(int row = 0; row < rows; row++)
+        for(int col = 0; col < cols; col++)
+            matrix[row][col] = mtrx[col+row*cols];
 }
 
 void go_forward(){
@@ -64,7 +54,7 @@ void go_forward(){
     int total = rows*cols;
 
     for(int i = 0; i < total; i++)
-         m[i] = 0;
+        mtrx[i] = 0;
 
     for(int i = 0; i < x; i++){
         sum = pos[i] + cantidad_de_pasos;
@@ -72,7 +62,7 @@ void go_forward(){
             pos[i] = sum - total;
         else
             pos[i] = sum;
-        m[pos[i]] = arr[i];
+        mtrx[pos[i]] = arr[i];
     }
     array_to_matrix();
 }
@@ -82,7 +72,7 @@ void go_backward(){
     int total = rows*cols;
 
     for(int i = 0; i < total; i++)
-         m[i] = 0;
+        mtrx[i] = 0;
 
     for(int i = 0; i < x; i++){
         res = pos[i] - cantidad_de_pasos;
@@ -90,7 +80,7 @@ void go_backward(){
             pos[i] = res + total;
         else
             pos[i] = res;
-        m[pos[i]] = arr[i];
+        mtrx[pos[i]] = arr[i];
     }
     array_to_matrix();
 }
@@ -111,7 +101,7 @@ int main(){
     scanf("%d", &cols);
 
     if(cols > 100){
-        while(rows > 100){
+        while(cols > 100){
             printf("No puede ingresar mas de 100 columnas\n");
             printf("Ingrese la cantidad de columnas: ");
             scanf("%d", &cols);
@@ -119,14 +109,13 @@ int main(){
     }
 
     create_matrix();
-    matrix_to_array();
 
     printf("Cuantas posiciones numerar: ");
     scanf("%d", &x);
 
     int total = rows*cols;
     if(x > total){
-       while(x > total){
+        while(x > total){
             printf("No puede numerar mas de %d posiciones.\n", total);
             printf("Cuantas posiciones numerar: ");
             scanf("%d", &x);
@@ -145,26 +134,26 @@ int main(){
         scanf("%d", &opt);
 
         switch(opt){
-            case 1:
-                printf("Ingrese la cantidad de pasos a desplazar: ");
-                scanf("%d", &cantidad_de_pasos);
-                go_forward();
-                display_matrix();
+        case 1:
+            printf("Ingrese la cantidad de pasos a desplazar: ");
+            scanf("%d", &cantidad_de_pasos);
+            go_forward();
+            display_matrix();
             break;
 
-            case 2:
-                printf("Ingrese la cantidad de pasos a desplazar: ");
-                scanf("%d", &cantidad_de_pasos);
-                go_backward();
-                display_matrix();
+        case 2:
+            printf("Ingrese la cantidad de pasos a desplazar: ");
+            scanf("%d", &cantidad_de_pasos);
+            go_backward();
+            display_matrix();
             break;
 
-            case 0:
-                printf("Adios...");
+        case 0:
+            printf("Adios...");
             break;
 
-            default:
-                printf("No existe esa opcion.\n");
+        default:
+            printf("No existe esa opcion.\n");
         }
 
     }
