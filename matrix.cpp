@@ -137,15 +137,23 @@ int main(){
         case 1:
             printf("Ingrese la cantidad de pasos a desplazar: ");
             scanf("%d", &cantidad_de_pasos);
-            go_forward();
-            display_matrix();
+            if(cantidad_de_pasos <= total){
+                go_forward();
+                display_matrix();
+            }else{
+                printf("No puede desplazarse esa cantidad de pasos.\n");
+            }
             break;
 
         case 2:
             printf("Ingrese la cantidad de pasos a desplazar: ");
             scanf("%d", &cantidad_de_pasos);
-            go_backward();
-            display_matrix();
+            if(cantidad_de_pasos <= total){
+                go_backward();
+                display_matrix();
+            }else{
+                printf("No puede desplazarse esa cantidad de pasos.\n");
+            }
             break;
 
         case 0:
